@@ -9,7 +9,7 @@
    :dont-use     '[map]
    :implemented? true}
   [f & colls]
-  (loop [collection (first colls) result []]
+  (loop [collection colls result []]
     (if (empty? collection)
       result
       (recur (rest collection) (conj result (f (first collection)))))))
@@ -21,8 +21,15 @@
   {:level        :easy
    :use          '[loop recur]
    :dont-use     '[filter]
-   :implemented? false}
-  [pred coll])
+   :implemented? true}
+  [pred coll]
+  (loop [coll coll
+         result []]
+    (if (empty? coll) result
+        (let [x (first coll)]
+          (if (pred x)
+            (recur (rest coll) (conj result x))
+            (recur (rest coll) result))))))
 
 (defn reduce'
   "Implement your own multi-arity version of reduce
@@ -41,8 +48,13 @@
   {:level        :easy
    :use          '[loop recur]
    :dont-use     '[count]
-   :implemented? false}
-  ([coll]))
+   :implemented? true}
+  ([coll]
+   (loop [coll coll
+          counter 0]
+     (if (empty? coll)
+       counter
+       (recur (rest coll) (inc counter))))))
 
 (defn reverse'
   "Implement your own version of reverse that reverses a coll.
@@ -50,8 +62,9 @@
   {:level        :easy
    :use          '[reduce conj seqable? when]
    :dont-use     '[reverse]
-   :implemented? false}
-  ([coll]))
+   :implemented? true}
+  ([coll]
+   (when (seqable? coll) (reduce conj '() coll))))
 
 (defn every?'
   "Implement your own version of every? that checks if every
@@ -59,8 +72,13 @@
   {:level        :easy
    :use          '[loop recur and]
    :dont-use     '[every?]
-   :implemented? false}
-  ([pred coll]))
+   :implemented? true}
+  ([pred coll]
+   (loop [coll coll
+          everything true]
+     (if (or (false? everything) (empty? coll))
+       everything
+       (recur (rest coll) (pred (first coll)))))))
 
 (defn some?'
   "Implement your own version of some that checks if at least one
@@ -70,8 +88,13 @@
   {:level        :easy
    :use          '[loop recur or]
    :dont-use     '[some]
-   :implemented? false}
-  ([pred coll]))
+   :implemented? true}
+  ([pred coll]
+   (loop [coll coll
+          result false]
+     (if (or (true? result) (empty? coll))
+       result
+       (recur (rest coll) (pred (first coll)))))))
 
 (defn ascending?
   "Verify if every element is greater than or equal to its predecessor"
@@ -138,8 +161,9 @@
   {:level        :easy
    :use          '[remove set]
    :dont-use     '[loop recur if]
-   :implemented? false}
-  [coll1 coll2])
+   :implemented? true}
+  [coll1 coll2]
+  (remove (set coll1) coll2))
 
 (defn union
   "Given two collections, returns a new collection with elements from the second
@@ -235,8 +259,13 @@
   {:level        :easy
    :use          '[empty? loop recur butlast rest]
    :dont-use     '[reverse]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (loop [coll coll]
+    (cond
+      (empty? coll) true
+      (not= (first coll) (last coll)) false
+      :else (recur (butlast (rest coll))))))
 
 (defn index-of
   "index-of takes a sequence and an element and finds the index
@@ -245,8 +274,14 @@
   {:level        :easy
    :use          '[loop recur rest]
    :dont-use     '[.indexOf memfn]
-   :implemented? false}
-  [coll n])
+   :implemented? true}
+  [coll n]
+  (loop [coll coll index 0]
+    (if (empty? coll)
+      -1
+      (if (= n (first coll))
+        index
+        (recur (rest coll) (inc index))))))
 
 (defn validate-sudoku-grid
   "Given a 9 by 9 sudoku grid, validate it."
