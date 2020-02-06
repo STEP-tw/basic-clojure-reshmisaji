@@ -63,3 +63,27 @@
     (is (= '(0 1 2 3 0 1 2 3) (repeat-and-truncate (range 4) true false 6))))
   (testing "when collection is non empty but not truncating and non repeating"
     (is (= '(0 1 2 3) (repeat-and-truncate (range 4) false false 6)))))
+
+(deftest order-in-words-test
+  (testing "when the first element is greater"
+    (is (= [:x-greater-than-y :y-greater-than-z] (order-in-words 4 3 2))))
+  (testing "when the third element is greater"
+    (is (= [:x-greater-than-y :z-greater-than-x] (order-in-words 4 3 5))))
+  (testing "when the third element is greater and they are in order"
+    (is (= [:z-greater-than-x] (order-in-words 2 3 4)))))
+
+(deftest zero-aliases-test
+  (testing "When zero is given"
+    (is (= :zero (zero-aliases 0))))
+  (testing "When [] is given"
+    (is (= :empty (zero-aliases []))))
+  (testing "When () is given"
+    (is (= :empty (zero-aliases ()))))
+  (testing "When " " is given"
+           (is (= :empty-string (zero-aliases ""))))
+  (testing "When #{} is given"
+    (is (= :empty-set (zero-aliases #{}))))
+  (testing "When {} is given"
+    (is (= :empty-map (zero-aliases {}))))
+  (testing "When 1 is given"
+    (is (= :not-zero (zero-aliases 1)))))
