@@ -122,5 +122,5 @@
    :use '[as-> reverse]
    :implemented? true}
   [coll]
-  (as-> (map #(if (number? %) (inc %) %) coll) coll
-    (concat (reverse coll) (cons 0 coll))))
+  (when-not (zero? (count coll)) (as-> (map #(if (number? %) (inc %) %) coll) coll
+                                   (concat (reverse coll) (cons 0 coll)))))

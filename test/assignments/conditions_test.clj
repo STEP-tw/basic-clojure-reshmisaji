@@ -87,3 +87,9 @@
     (is (= :empty-map (zero-aliases {}))))
   (testing "When 1 is given"
     (is (= :not-zero (zero-aliases 1)))))
+
+(deftest zero-separated-palindrome-test
+  (testing "when empty collection is given"
+    (is (nil? (zero-separated-palindrome []))))
+  (testing "when a non empty collection is given"
+    (is (= [2 0 2] (zero-separated-palindrome [1])))))
