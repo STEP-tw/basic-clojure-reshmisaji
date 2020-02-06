@@ -51,3 +51,15 @@
     (is (= :greece (five-point-someone 3 2))))
   (testing "When second parameter is greater than first"
     (is (= :universe (five-point-someone 3 6)))))
+
+(deftest repeat-and-truncate-test
+  (testing "when collection is empty"
+    (is (= '() (repeat-and-truncate [] true true 3))))
+  (testing "when collection is non empty"
+    (is (= '(0 1 2 3 0 1) (repeat-and-truncate (range 4) true true 6))))
+  (testing "when collection is non empty but not repeating"
+    (is (= '(0 1 2 3) (repeat-and-truncate (range 4) false true 6))))
+  (testing "when collection is non empty but not truncating"
+    (is (= '(0 1 2 3 0 1 2 3) (repeat-and-truncate (range 4) true false 6))))
+  (testing "when collection is non empty but not truncating and non repeating"
+    (is (= '(0 1 2 3) (repeat-and-truncate (range 4) false false 6)))))
